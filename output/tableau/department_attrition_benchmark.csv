@@ -1,0 +1,22 @@
+department,total_headcount,leavers_count,retained_count,attrition_rate_pct,avg_salary_sar,avg_satisfaction_score,variance_vs_company_pct,risk_tier
+Administration,194,74,120,38.14,9080.0,2.16,-5.1,Low Risk (>5% Below Avg)
+Teaching,185,43,142,23.24,6197.0,2.02,-20.0,Low Risk (>5% Below Avg)
+Patient Affairs,152,41,111,26.97,7941.0,2.07,-16.27,Low Risk (>5% Below Avg)
+Customer Service,142,66,76,46.48,5567.0,1.8,3.24,Moderate Risk
+Sales,138,72,66,52.17,5659.0,1.9,8.93,High Risk (>5% Above Avg)
+Processes,99,56,43,56.57,8859.0,1.83,13.32,High Risk (>5% Above Avg)
+Accounting,64,39,25,60.94,7211.0,1.92,17.7,High Risk (>5% Above Avg)
+Human Resources,45,28,17,62.22,9400.0,2.07,18.98,High Risk (>5% Above Avg)
+Public Relations,34,19,15,55.88,7441.0,2.12,12.64,High Risk (>5% Above Avg)
+Safety & Security,27,18,9,66.67,5204.0,1.67,23.43,High Risk (>5% Above Avg)
+Technical Support,27,14,13,51.85,6481.0,1.89,8.61,High Risk (>5% Above Avg)
+Information Technology,17,9,8,52.94,9235.0,1.71,9.7,High Risk (>5% Above Avg)
+Marketing,15,11,4,73.33,6267.0,2.0,30.09,High Risk (>5% Above Avg)
+Banking Operations,14,4,10,28.57,7893.0,1.79,-14.67,Low Risk (>5% Below Avg)
+Legal Affairs,11,5,6,45.45,6045.0,1.45,2.21,Moderate Risk
+Production,8,2,6,25.0,5000.0,1.63,-18.24,Low Risk (>5% Below Avg)
+Training,7,3,4,42.86,5429.0,2.14,-0.38,Moderate Risk
+Treasury,6,5,1,83.33,18000.0,1.83,40.09,High Risk (>5% Above Avg)
+Studies & Design,4,4,0,100.0,6875.0,1.75,56.76,High Risk (>5% Above Avg)
+Engineering,1,1,0,100.0,23000.0,2.0,56.76,High Risk (>5% Above Avg)
+Medical Service,1,1,0,100.0,7500.0,3.0,56.76,High Risk (>5% Above Avg)

@@ -1,0 +1,10 @@
+job_satisfaction,job_satisfaction_score,work_life_balance,headcount,leavers_count,attrition_rate_pct
+Not satisfied,1,Difficult,96,53,55.21
+Not satisfied,1,Easy,48,31,64.58
+Not satisfied,1,Medium,149,87,58.39
+Satisfied,2,Difficult,99,61,61.62
+Satisfied,2,Easy,102,34,33.33
+Satisfied,2,Medium,445,184,41.35
+Very satisfied,3,Difficult,27,19,70.37
+Very satisfied,3,Easy,96,20,20.83
+Very satisfied,3,Medium,129,26,20.16
