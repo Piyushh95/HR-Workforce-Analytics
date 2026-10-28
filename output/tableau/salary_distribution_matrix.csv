@@ -1,71 +1,71 @@
 department,monthly_salary_band,estimated_salary_sar,headcount,leavers_count,attrition_rate_pct
-Accounting,"Less than 5,000 SAR",3500.0,21,11,52.38
+Accounting,"Less than 5,000 SAR",2500.0,21,11,52.38
 Accounting,"5,000 to 10,000 SAR",7500.0,32,22,68.75
 Accounting,"11,000 to 15,000 SAR",13000.0,10,6,60.0
 Accounting,"16,000 to 20,000 SAR",18000.0,1,0,0.0
-Administration,"Less than 5,000 SAR",3500.0,54,24,44.44
+Administration,"Less than 5,000 SAR",2500.0,54,24,44.44
 Administration,"5,000 to 10,000 SAR",7500.0,79,28,35.44
 Administration,"11,000 to 15,000 SAR",13000.0,44,17,38.64
 Administration,"16,000 to 20,000 SAR",18000.0,11,4,36.36
 Administration,"31,000 SAR and more",35000.0,6,1,16.67
 Banking Operations,"5,000 to 10,000 SAR",7500.0,13,4,30.77
 Banking Operations,"11,000 to 15,000 SAR",13000.0,1,0,0.0
-Customer Service,"Less than 5,000 SAR",3500.0,74,45,60.81
+Customer Service,"Less than 5,000 SAR",2500.0,74,45,60.81
 Customer Service,"5,000 to 10,000 SAR",7500.0,65,20,30.77
 Customer Service,"11,000 to 15,000 SAR",13000.0,2,0,0.0
 Customer Service,"16,000 to 20,000 SAR",18000.0,1,1,100.0
 Engineering,"21,000 to 25,000 SAR",23000.0,1,1,100.0
-Human Resources,"Less than 5,000 SAR",3500.0,6,3,50.0
+Human Resources,"Less than 5,000 SAR",2500.0,6,3,50.0
 Human Resources,"5,000 to 10,000 SAR",7500.0,20,10,50.0
 Human Resources,"11,000 to 15,000 SAR",13000.0,18,14,77.78
 Human Resources,"16,000 to 20,000 SAR",18000.0,1,1,100.0
-Information Technology,"Less than 5,000 SAR",3500.0,5,2,40.0
+Information Technology,"Less than 5,000 SAR",2500.0,5,2,40.0
 Information Technology,"5,000 to 10,000 SAR",7500.0,7,4,57.14
 Information Technology,"11,000 to 15,000 SAR",13000.0,4,2,50.0
 Information Technology,"31,000 SAR and more",35000.0,1,1,100.0
-Legal Affairs,"Less than 5,000 SAR",3500.0,4,2,50.0
+Legal Affairs,"Less than 5,000 SAR",2500.0,4,2,50.0
 Legal Affairs,"5,000 to 10,000 SAR",7500.0,7,3,42.86
-Marketing,"Less than 5,000 SAR",3500.0,6,4,66.67
+Marketing,"Less than 5,000 SAR",2500.0,6,4,66.67
 Marketing,"5,000 to 10,000 SAR",7500.0,8,6,75.0
 Marketing,"11,000 to 15,000 SAR",13000.0,1,1,100.0
 Medical Service,"5,000 to 10,000 SAR",7500.0,1,1,100.0
-Patient Affairs,"Less than 5,000 SAR",3500.0,75,23,30.67
+Patient Affairs,"Less than 5,000 SAR",2500.0,75,23,30.67
 Patient Affairs,"5,000 to 10,000 SAR",7500.0,47,12,25.53
 Patient Affairs,"11,000 to 15,000 SAR",13000.0,15,2,13.33
 Patient Affairs,"16,000 to 20,000 SAR",18000.0,6,3,50.0
 Patient Affairs,"21,000 to 25,000 SAR",23000.0,1,0,0.0
 Patient Affairs,"26,000 to 30,000 SAR",28000.0,2,1,50.0
 Patient Affairs,"31,000 SAR and more",35000.0,6,0,0.0
-Processes,"Less than 5,000 SAR",3500.0,34,16,47.06
+Processes,"Less than 5,000 SAR",2500.0,34,16,47.06
 Processes,"5,000 to 10,000 SAR",7500.0,32,17,53.13
 Processes,"11,000 to 15,000 SAR",13000.0,26,18,69.23
 Processes,"16,000 to 20,000 SAR",18000.0,3,2,66.67
 Processes,"26,000 to 30,000 SAR",28000.0,2,1,50.0
 Processes,"31,000 SAR and more",35000.0,2,2,100.0
-Production,"Less than 5,000 SAR",3500.0,5,2,40.0
+Production,"Less than 5,000 SAR",2500.0,5,2,40.0
 Production,"5,000 to 10,000 SAR",7500.0,3,0,0.0
-Public Relations,"Less than 5,000 SAR",3500.0,6,3,50.0
+Public Relations,"Less than 5,000 SAR",2500.0,6,3,50.0
 Public Relations,"5,000 to 10,000 SAR",7500.0,24,15,62.5
 Public Relations,"11,000 to 15,000 SAR",13000.0,4,1,25.0
-Safety & Security,"Less than 5,000 SAR",3500.0,22,14,63.64
+Safety & Security,"Less than 5,000 SAR",2500.0,22,14,63.64
 Safety & Security,"5,000 to 10,000 SAR",7500.0,3,2,66.67
 Safety & Security,"11,000 to 15,000 SAR",13000.0,1,1,100.0
 Safety & Security,"26,000 to 30,000 SAR",28000.0,1,1,100.0
-Sales,"Less than 5,000 SAR",3500.0,73,38,52.05
+Sales,"Less than 5,000 SAR",2500.0,73,38,52.05
 Sales,"5,000 to 10,000 SAR",7500.0,59,31,52.54
 Sales,"11,000 to 15,000 SAR",13000.0,5,3,60.0
 Sales,"16,000 to 20,000 SAR",18000.0,1,0,0.0
-Studies & Design,"Less than 5,000 SAR",3500.0,2,2,100.0
+Studies & Design,"Less than 5,000 SAR",2500.0,2,2,100.0
 Studies & Design,"5,000 to 10,000 SAR",7500.0,1,1,100.0
 Studies & Design,"11,000 to 15,000 SAR",13000.0,1,1,100.0
-Teaching,"Less than 5,000 SAR",3500.0,89,25,28.09
+Teaching,"Less than 5,000 SAR",2500.0,89,25,28.09
 Teaching,"5,000 to 10,000 SAR",7500.0,76,15,19.74
 Teaching,"11,000 to 15,000 SAR",13000.0,19,3,15.79
 Teaching,"16,000 to 20,000 SAR",18000.0,1,0,0.0
-Technical Support,"Less than 5,000 SAR",3500.0,11,4,36.36
+Technical Support,"Less than 5,000 SAR",2500.0,11,4,36.36
 Technical Support,"5,000 to 10,000 SAR",7500.0,13,9,69.23
 Technical Support,"11,000 to 15,000 SAR",13000.0,3,1,33.33
-Training,"Less than 5,000 SAR",3500.0,5,3,60.0
+Training,"Less than 5,000 SAR",2500.0,5,3,60.0
 Training,"5,000 to 10,000 SAR",7500.0,1,0,0.0
 Training,"11,000 to 15,000 SAR",13000.0,1,0,0.0
 Treasury,"16,000 to 20,000 SAR",18000.0,6,5,83.33

@@ -47,30 +47,54 @@ def export_dashboard_data(
     
     # 3. Department Attrition & Benchmark Summary
     dept_query = """
-    WITH company AS (SELECT AVG(is_attrition) * 100.0 AS comp_avg FROM employees)
+    WITH company AS (SELECT AVG(is_attrition) * 100.0 AS comp_avg FROM employees),
+    dept_all AS (
+        SELECT 
+            department,
+            COUNT(*) AS total_headcount,
+            SUM(is_attrition) AS leavers_count,
+            COUNT(*) - SUM(is_attrition) AS retained_count,
+            ROUND(AVG(is_attrition) * 100.0, 2) AS attrition_rate_pct,
+            ROUND(AVG(estimated_salary_sar), 0) AS avg_salary_sar,
+            ROUND(AVG(job_satisfaction_score), 2) AS avg_satisfaction_score
+        FROM employees
+        GROUP BY department
+    ),
+    dept_eligible AS (
+        SELECT 
+            department,
+            ROUND(attrition_rate_pct - c.comp_avg, 2) AS variance_vs_company_pct,
+            ROUND(attrition_rate_pct / c.comp_avg, 2) AS attrition_risk_index,
+            CASE 
+                WHEN attrition_rate_pct > c.comp_avg + 5.0 THEN 'High Risk (>5% Above Avg)'
+                WHEN attrition_rate_pct < c.comp_avg - 5.0 THEN 'Low Risk (>5% Below Avg)'
+                ELSE 'Moderate Risk'
+            END AS risk_tier
+        FROM dept_all
+        CROSS JOIN company c
+        GROUP BY department
+        HAVING total_headcount >= 20 -- Minimum department sample threshold
+    )
     SELECT 
-        department,
-        COUNT(*) AS total_headcount,
-        SUM(is_attrition) AS leavers_count,
-        COUNT(*) - SUM(is_attrition) AS retained_count,
-        ROUND(AVG(is_attrition) * 100.0, 2) AS attrition_rate_pct,
-        ROUND(AVG(estimated_salary_sar), 0) AS avg_salary_sar,
-        ROUND(AVG(job_satisfaction_score), 2) AS avg_satisfaction_score,
-        ROUND(AVG(is_attrition) * 100.0 - c.comp_avg, 2) AS variance_vs_company_pct,
-        CASE 
-            WHEN AVG(is_attrition) * 100.0 > c.comp_avg + 5.0 THEN 'High Risk (>5% Above Avg)'
-            WHEN AVG(is_attrition) * 100.0 < c.comp_avg - 5.0 THEN 'Low Risk (>5% Below Avg)'
-            ELSE 'Moderate Risk'
-        END AS risk_tier
-    FROM employees
-    CROSS JOIN company c
-    GROUP BY department
-    ORDER BY total_headcount DESC;
+        d.department,
+        d.total_headcount,
+        d.leavers_count,
+        d.retained_count,
+        d.attrition_rate_pct,
+        d.avg_salary_sar,
+        d.avg_satisfaction_score,
+        e.variance_vs_company_pct,
+        e.attrition_risk_index,
+        CASE WHEN d.total_headcount < 20 THEN 1 ELSE 0 END AS small_sample,
+        e.risk_tier
+    FROM dept_all d
+    LEFT JOIN dept_eligible e ON d.department = e.department
+    ORDER BY small_sample ASC, d.total_headcount DESC;
     """
     df_dept = pd.read_sql_query(dept_query, conn)
     dept_path = os.path.join(output_dir, "department_attrition_benchmark.csv")
     df_dept.to_csv(dept_path, index=False)
-    print(f"3. Department Benchmark: {dept_path} ({len(df_dept)} rows)")
+    print(f"3. Department Benchmark: {dept_path} ({len(df_dept)} rows, small_sample flagged for N<20)")
     
     # 4. Tenure Cohort & Career Stage Summary
     tenure_query = """

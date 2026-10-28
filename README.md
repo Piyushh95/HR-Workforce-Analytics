@@ -69,16 +69,21 @@ The source project archive contained three Excel workbooks:
 ```
 HR-Workforce-Analytics/
 │
+├── .github/
+│   └── workflows/
+│       └── ci.yml                           # GitHub Actions CI workflow (Python 3.12, tests, SQL checks)
+│
 ├── data/
 │   ├── raw/                                 # Raw Excel workbooks and survey keys
 │   ├── processed/                           # Cleaned, standardized CSV dataset
+│   ├── METHODOLOGY.md                       # Documented midpoint estimation methodology & limitations
 │   └── hr_analytics.db                      # Indexed SQLite database
 │
 ├── sql/
 │   ├── 01_data_quality.sql                  # Primary key, null audit, and domain constraints
 │   ├── 02_workforce_kpis.sql                # Executive headcount, attrition, and tenure KPIs
 │   ├── 03_attrition_analysis.sql            # Overtime, health, promotion, and turnover drivers
-│   ├── 04_department_analysis.sql           # Department headcount, risk indexing, and benchmarks
+│   ├── 04_department_analysis.sql           # Department headcount, risk indexing, and benchmarks (N >= 20)
 │   ├── 05_salary_analysis.sql               # Pay band distribution and job role DENSE_RANK()
 │   ├── 06_tenure_analysis.sql               # Career stage matrix and early-tenure flight risk
 │   ├── 07_satisfaction_analysis.sql         # Likert sentiment, burnout, and training utility ROI
@@ -87,7 +92,7 @@ HR-Workforce-Analytics/
 ├── scripts/
 │   ├── inspect_data.py                      # Verifies raw workbook schemas and record counts
 │   ├── compare_datasets.py                  # Identifies 17-record discrepancy and exports audit
-│   ├── clean_data.py                        # Standardizes schema, cleans whitespace, adds midpoints
+│   ├── clean_data.py                        # Centralized MIDPOINTS dictionary, cleans whitespace
 │   ├── load_database.py                     # Populates SQLite 'employees' table and creates indexes
 │   ├── run_quality_checks.py                # Automated runner testing all 8 SQL files
 │   ├── export_dashboard_data.py             # Exports Tableau-ready master and aggregate CSVs
@@ -101,7 +106,9 @@ HR-Workforce-Analytics/
 ├── tableau/                                 # Tableau Public workbook deliverables
 │
 ├── tests/
-│   └── test_cleaning_suite.py               # Unit tests verifying cleaning functions and integrity
+│   ├── test_clean_data.py                   # Data cleaning unit tests
+│   ├── test_cleaning_suite.py               # Dataset hygiene and entity resolution test suite
+│   └── test_regression.py                   # Regression tests for midpoints, sample flags, tenure metrics
 │
 ├── requirements.txt
 ├── .gitignore
@@ -176,7 +183,7 @@ The repository includes 8 comprehensive SQL files executing across `data/hr_anal
 | **Total Leavers** | **515** | Employees | Respondents reporting having left prior employer |
 | **Overall Attrition Rate** | **43.24%** | Percentage | `Total Leavers / Total Headcount` |
 | **Estimated Avg Tenure** | **4.8** | Years | Estimated mean duration at last organization |
-| **Estimated Avg Salary** | **SAR 7,853** | SAR / Month | Estimated mean monthly compensation across bands |
+| **Estimated Avg Salary** | **SAR 7,445** | SAR / Month | Estimated mean monthly compensation across bands (`data/METHODOLOGY.md`) |
 | **Avg Job Satisfaction** | **1.97 / 3.00** | Rating | Standardized Likert scale (1=Low, 2=Med, 3=High) |
 
 ---
@@ -188,15 +195,22 @@ The repository includes 8 comprehensive SQL files executing across `data/hr_anal
 * **Business Interpretation:** Overtime itself is not inherently detrimental to retention; rather, uncompensated extra hours correlate strongly with higher turnover propensity.
 * **Analytical Limitation:** Descriptive cross-sectional data cannot prove causality; uncompensated overtime may co-occur with broader operational stressors or understaffing.
 
-### Finding 2: Early-Tenure Flight Risk (<5 Years)
-* **Observed Pattern:** Employees in the **<5 years tenure band** exhibit a **53.35% attrition rate** (382 leavers / 716 employees). This single cohort represents **74.17% of all leavers in the entire dataset** (382 of 515 total leavers). Attrition drops to **33.52%** at 5–10 years, **20.00%** at 11–15 years, and **0.00%** beyond 16 years.
-* **Business Interpretation:** Organizational turnover risk is overwhelmingly concentrated during early career integration. Retention interventions (onboarding, structured mentorship, and milestone reviews) offer the highest financial ROI during the initial 3–5 years.
-* **Analytical Limitation:** Tenure is measured in survey brackets, masking micro-trends within years 1 through 4.
+### Finding 2: Early-Tenure Retention Dynamics (<5 Years)
+* **Observed Metrics (Three-Metric Comparison):**
+  * **Attrition Rate Within Group:** **53.35%** (`382 leavers / 716 group respondents`)
+  * **Share of Total Recorded Leavers:** **74.17%** (`382 leavers / 515 total leavers`)
+  * **Share of Total Survey Respondents:** **60.12%** (`716 respondents / 1,191 total respondents`)
+* **Tenure Progression Comparison:** Attrition rate within group drops to **33.52%** (118/352) at 5–10 years, **20.00%** (15/75) at 11–15 years, and **0.00%** (0/48) beyond 16 years.
+* **Business Interpretation:** While early-tenure employees account for the vast majority of leavers (74.17%), this is partly driven by their large share of the surveyed workforce (60.12%). Even after accounting for population share, the attrition rate within this group (53.35%) exceeds the organizational average (43.24%). However, a high share of leavers in a cohort does not automatically imply the highest possible attrition rate without comparing group-level denominators.
+* **Methodological Warning & Analytical Limitation:** Tenure for non-leavers may be ambiguous because the source instrument measures tenure at the last organization, and the survey data may not establish whether non-leavers' responses represent completed prior employment or current tenure. Descriptive comparisons must not be interpreted as causal effects. Furthermore, tenure is measured in broad survey brackets, masking micro-trends within years 1 through 4.
 
-### Finding 3: Departmental Retention Disparity
-* **Observed Pattern:** High-turnover departments include **Safety & Security (66.67%)**, **Human Resources (62.22%)**, **Accounting (60.94%)**, **Processes (56.57%)**, **Public Relations (55.88%)**, and **Sales (52.17%)**. Low-turnover units include **Teaching (23.24%)** and **Patient Affairs (26.97%)**.
-* **Business Interpretation:** Professional and administrative support functions experience turnover rates over 2.6 times higher than specialized public-facing roles like Teaching.
-* **Analytical Limitation:** Smaller departments (e.g., Safety & Security with N=27) have wider confidence intervals.
+### Finding 3: Departmental Retention Disparity & Sample Thresholding
+* **Observed Pattern:** Applying a minimum reliability threshold of $N \ge 20$ employees separates 11 eligible departments from 10 small-sample departments:
+  * **Eligible High-Risk Departments ($N \ge 20$):** **Safety & Security (66.67%, N=27)**, **Human Resources (62.22%, N=45)**, **Accounting (60.94%, N=64)**, **Processes (56.57%, N=99)**, **Public Relations (55.88%, N=34)**, and **Sales (52.17%, N=23)**.
+  * **Eligible Low-Risk Departments ($N \ge 20$):** **Teaching (23.24%, N=142)** and **Patient Affairs (26.97%, N=89)**.
+  * **Small-Sample Departments ($N < 20$):** 10 departments (IT, Marketing, Banking Operations, Legal Affairs, Production, Training, Treasury, Studies & Design, Engineering, Medical Service) are retained in reporting but flagged (`small_sample = 1`) with risk tiers left unassigned (`NULL`) to avoid small-sample volatility.
+* **Business Interpretation:** Among sufficiently sampled departments, administrative and operational support functions experience turnover rates over 2.6 times higher than specialized public-facing roles like Teaching.
+* **Analytical Limitation:** Departments with fewer than 20 respondents exhibit high sampling error, requiring suppressed risk classifications until adequate sample size is achieved.
 
 ### Finding 4: The Job Satisfaction Retention Gradient
 * **Observed Pattern:** Employees reporting they were **"Not satisfied"** show an attrition rate of **58.36%** (171 leavers / 293 employees). Those who were **"Satisfied"** had a **43.19% rate** (279 / 646), and those **"Very satisfied"** had a **25.79% rate** (65 / 252).
@@ -255,8 +269,8 @@ python scripts/compare_datasets.py
 # Step 3: Clean and validate dataset
 python scripts/clean_data.py
 
-# Step 4: Run unit tests
-python -m unittest tests/test_cleaning_suite.py
+# Step 4: Run test suite (unit & regression tests)
+python -m unittest discover tests
 
 # Step 5: Load SQLite database
 python scripts/load_database.py
@@ -270,17 +284,28 @@ python scripts/export_dashboard_data.py
 
 ---
 
-## 14. Project Limitations
+## 14. Continuous Integration & Quality Assurance
 
-1. **Retrospective Survey Design:** The data captures self-reported employee sentiment rather than objective, continuous transactional logs from an enterprise HRIS.
-2. **Grouped Ordinal Fields:** Age, tenure, and monthly compensation are measured in categorical brackets rather than exact numbers, requiring midpoint estimations for aggregate mathematical averages.
-3. **Provenance Boundaries:** Specific collection dates and institutional affiliations were not stated in the source documentation.
-4. **Descriptive Nature:** All analyses demonstrate observed statistical correlations; direct causality cannot be inferred without controlled experimental or longitudinal data.
+Automated testing is configured via GitHub Actions in [`.github/workflows/ci.yml`](file:///.github/workflows/ci.yml):
+* **Environment:** Python 3.12 runner
+* **Test Stages:**
+  1. `python -m unittest discover tests` — Executes data cleaning, entity resolution, and regression tests (verifying midpoints, boundary conditions $N=19, 20, 21$, and tenure metric definitions).
+  2. `python scripts/load_database.py` — Builds indexed SQLite database.
+  3. `python scripts/run_quality_checks.py` — Executes and validates all 29 SQL queries across 8 analytical files.
 
 ---
 
-## 15. Future Enhancements
+## 15. Project Limitations
+
+1. **Retrospective Survey Design:** The data captures self-reported employee sentiment rather than objective, continuous transactional logs from an enterprise HRIS.
+2. **Grouped Ordinal Fields:** Age, tenure, and monthly compensation are measured in categorical brackets rather than exact numbers, requiring midpoint approximations (`data/METHODOLOGY.md`) for aggregate mathematical averages.
+3. **Non-Leaver Tenure Ambiguity:** The source instrument measures tenure at the last organization; survey data may not establish whether non-leavers' responses represent completed prior employment or current tenure.
+4. **Provenance Boundaries:** Specific collection dates and institutional affiliations were not stated in the source documentation.
+5. **Descriptive Nature:** All analyses demonstrate observed statistical correlations; direct causality cannot be inferred without controlled experimental or longitudinal data.
+
+---
+
+## 16. Future Enhancements
 
 * **Time-to-Event Survival Analysis:** Implement Kaplan-Meier survival curves and Cox proportional hazards modeling if longitudinal date timestamps become available.
 * **Exit Interview Natural Language Processing (NLP):** Incorporate qualitative open-text survey fields using sentiment analysis.
-* **Enterprise CI/CD Integration:** Deploy automated GitHub Actions workflows to execute the unit test and SQL test suites on every pull request.

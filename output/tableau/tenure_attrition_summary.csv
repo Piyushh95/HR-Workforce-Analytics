@@ -1,8 +1,8 @@
 tenure_last_org_band,estimated_tenure_years,headcount,leavers_count,attrition_rate_pct,avg_salary_sar,avg_satisfaction_score
-Less than 5 years,2.5,716,382,53.35,6239.0,1.83
-From 5 to 10 years,7.5,352,118,33.52,8358.0,2.12
-From 11 to 15 years,13.0,75,15,20.0,9467.0,2.21
-From 16 to 20 years,18.0,26,0,0.0,12173.0,2.35
-From 21 to 25 years,23.0,13,0,0.0,11846.0,2.54
-From 26 to 30 years,28.0,5,0,0.0,8300.0,2.6
+Less than 5 years,2.5,716,382,53.35,5718.0,1.83
+From 5 to 10 years,7.5,352,118,33.52,8097.0,2.12
+From 11 to 15 years,13.0,75,15,20.0,9293.0,2.21
+From 16 to 20 years,18.0,26,0,0.0,11942.0,2.35
+From 21 to 25 years,23.0,13,0,0.0,11462.0,2.54
+From 26 to 30 years,28.0,5,0,0.0,7700.0,2.6
 From 31 to 35 years,33.0,4,0,0.0,14375.0,2.25

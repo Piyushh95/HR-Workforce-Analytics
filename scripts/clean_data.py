@@ -109,50 +109,98 @@ def clean_salary_band(val: str) -> str:
     return s
 
 
-def calculate_salary_midpoint(band: str) -> float:
-    midpoints = {
-        'Less than 5,000 SAR': 3500.0,
+# ==============================================================================
+# CENTRALIZED MIDPOINT ESTIMATION MAPPINGS
+# ==============================================================================
+# Categorical intervals are converted to numerical midpoints for descriptive
+# aggregation (e.g., mean estimations in SQL and BI cards).
+# Note: These values represent estimated approximations of interval brackets,
+# NOT exact individual-level measurements.
+# ==============================================================================
+
+MIDPOINTS = {
+    'salary': {
+        # Natural zero lower bound: [0, 5000) -> (0 + 5000) / 2 = 2500.0 SAR
+        'Less than 5,000 SAR': 2500.0,
+        # Closed interval: [5000, 10000] -> (5000 + 10000) / 2 = 7500.0 SAR
         '5,000 to 10,000 SAR': 7500.0,
+        # Closed interval: [11000, 15000] -> (11000 + 15000) / 2 = 13000.0 SAR
         '11,000 to 15,000 SAR': 13000.0,
+        # Closed interval: [16000, 20000] -> (16000 + 20000) / 2 = 18000.0 SAR
         '16,000 to 20,000 SAR': 18000.0,
+        # Closed interval: [21000, 25000] -> (21000 + 25000) / 2 = 23000.0 SAR
         '21,000 to 25,000 SAR': 23000.0,
+        # Closed interval: [26000, 30000] -> (26000 + 30000) / 2 = 28000.0 SAR
         '26,000 to 30,000 SAR': 28000.0,
-        '31,000 SAR and more': 35000.0
+        # Open-ended top bracket: [31000, inf). Documented assumption: upper boundary
+        # estimated at 39,000 SAR (consistent with preceding 5k-8k band spreads),
+        # yielding midpoint (31000 + 39000) / 2 = 35000.0 SAR.
+        '31,000 SAR and more': 35000.0,
+    },
+    'tenure': {
+        # Lower bound zero: [0, 5) -> (0 + 5) / 2 = 2.5 years
+        'Less than 5 years': 2.5,
+        # Closed interval: [5, 10] -> (5 + 10) / 2 = 7.5 years
+        'From 5 to 10 years': 7.5,
+        # Closed interval: [11, 15] -> (11 + 15) / 2 = 13.0 years
+        'From 11 to 15 years': 13.0,
+        # Closed interval: [16, 20] -> (16 + 20) / 2 = 18.0 years
+        'From 16 to 20 years': 18.0,
+        # Closed interval: [21, 25] -> (21 + 25) / 2 = 23.0 years
+        'From 21 to 25 years': 23.0,
+        # Closed interval: [26, 30] -> (26 + 30) / 2 = 28.0 years
+        'From 26 to 30 years': 28.0,
+        # Closed interval: [31, 35] -> (31 + 35) / 2 = 33.0 years
+        'From 31 to 35 years': 33.0,
+        # Closed interval: [36, 40] -> (36 + 40) / 2 = 38.0 years
+        'From 36 to 40 years': 38.0,
+    },
+    'age': {
+        # Closed interval: [21, 30] -> (21 + 30) / 2 = 25.5 years
+        '21 to 30': 25.5,
+        # Closed interval: [31, 40] -> (31 + 40) / 2 = 35.5 years
+        '31 to 40': 35.5,
+        # Closed interval: [41, 50] -> (41 + 50) / 2 = 45.5 years
+        '41 to 50': 45.5,
+        # Closed interval: [51, 60] -> (51 + 60) / 2 = 55.5 years
+        '51 to 60': 55.5,
     }
-    return midpoints.get(band, np.nan)
+}
+
+
+def calculate_salary_midpoint(band: str) -> float:
+    """Calculates estimated salary from standardized or raw salary band using MIDPOINTS."""
+    if pd.isna(band):
+        return np.nan
+    s = clean_text(band)
+    standardized = clean_salary_band(s)
+    return MIDPOINTS['salary'].get(standardized, np.nan)
 
 
 def calculate_tenure_midpoint(band: str) -> float:
+    """Calculates estimated tenure years from tenure/experience band using MIDPOINTS."""
+    if pd.isna(band):
+        return np.nan
     s = clean_text(band)
-    if 'Less than 5' in s:
-        return 2.5
-    elif '5 to 10' in s:
-        return 7.5
-    elif '11 to 15' in s:
-        return 13.0
-    elif '16 to 20' in s:
-        return 18.0
-    elif '21 to 25' in s:
-        return 23.0
-    elif '26 to 30' in s:
-        return 28.0
-    elif '31 to 35' in s:
-        return 33.0
-    elif '36 to 40' in s:
-        return 38.0
+    if s in MIDPOINTS['tenure']:
+        return MIDPOINTS['tenure'][s]
+    # Match against normalized keys
+    for k, v in MIDPOINTS['tenure'].items():
+        if k.lower() == s.lower() or (k in s):
+            return v
     return np.nan
 
 
 def calculate_age_midpoint(band: str) -> float:
+    """Calculates estimated age years from age band using MIDPOINTS."""
+    if pd.isna(band):
+        return np.nan
     s = clean_text(band)
-    if '21 to 30' in s:
-        return 25.5
-    elif '31 to 40' in s:
-        return 35.5
-    elif '41 to 50' in s:
-        return 45.5
-    elif '51 to 60' in s:
-        return 55.5
+    if s in MIDPOINTS['age']:
+        return MIDPOINTS['age'][s]
+    for k, v in MIDPOINTS['age'].items():
+        if k in s:
+            return v
     return np.nan
 
 
