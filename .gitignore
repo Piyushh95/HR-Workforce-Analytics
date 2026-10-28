@@ -17,6 +17,10 @@ data/raw/*.docx
 *.sqlite
 *.db
 
+# BI implementation guides
+tableau/*.md
+powerbi/*.md
+
 # OS generated files
 .DS_Store
 Thumbs.db

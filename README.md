@@ -97,11 +97,8 @@ HR-Workforce-Analytics/
 │   ├── quality_reports/                     # Markdown and CSV data quality reports
 │   └── tableau/                             # Tableau-ready master and aggregated CSV files
 │
-├── powerbi/
-│   └── powerbi_implementation_guide.md      # Star schema data model, DAX measures, and visual design
-│
-├── tableau/
-│   └── tableau_dashboard_guide.md           # Calculated fields, worksheet configs, layout specs
+├── powerbi/                                 # Power BI report deliverables
+├── tableau/                                 # Tableau Public workbook deliverables
 │
 ├── tests/
 │   └── test_cleaning_suite.py               # Unit tests verifying cleaning functions and integrity
@@ -215,10 +212,9 @@ The repository includes 8 comprehensive SQL files executing across `data/hr_anal
 
 ## 12. Tableau Public & Power BI Implementation
 
-Detailed build blueprints and formula specifications are documented in:
-* **Tableau Build Guide:** [`tableau/tableau_dashboard_guide.md`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/tableau/tableau_dashboard_guide.md)
-* **Power BI Implementation Guide:** [`powerbi/powerbi_implementation_guide.md`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/powerbi/powerbi_implementation_guide.md)
-* **Tableau Master Extract:** [`output/tableau/hr_workforce_master.csv`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/output/tableau/hr_workforce_master.csv)
+The master dataset extract and aggregated reporting tables are prepared for Tableau Public and Power BI integration:
+* **Primary Reporting Extract:** [`output/tableau/hr_workforce_master.csv`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/output/tableau/hr_workforce_master.csv) (1,191 rows, 60 features)
+* **Pre-Aggregated Benchmarks:** [`output/tableau/department_attrition_benchmark.csv`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/output/tableau/department_attrition_benchmark.csv)
 
 ### Visual Architecture:
 1. **Executive KPI Header:** Total Headcount (1,191), Leavers (515), Attrition Rate (43.2%), Estimated Avg Tenure (4.8 yrs).
