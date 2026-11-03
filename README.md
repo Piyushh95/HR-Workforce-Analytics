@@ -4,6 +4,32 @@ A comprehensive, end-to-end business intelligence and workforce analytics projec
 
 ---
 
+## 📊 Dashboard Preview
+
+<div align="center">
+
+<h3>HR Workforce Intelligence — Overview</h3>
+<p><em>KPI Summary · Department Attrition · Demographics · Working Conditions</em></p>
+
+<img src="screenshots/dashboard-overview.png" alt="HR Workforce Intelligence Dashboard — Overview: KPI cards showing 1191 headcount, 515 leavers, 43.2% attrition rate, 5.4 yrs avg tenure, SAR 6882 avg salary, 1.97/3 satisfaction. Department attrition bar chart, age group distribution, gender split, marital status, overtime payment analysis, business travel, and training programs" width="100%">
+
+<br><br>
+
+<h3>HR Workforce Intelligence — Detailed Analytics</h3>
+<p><em>Experience & Compensation · Tenure Analysis · Satisfaction & Well-being</em></p>
+
+<img src="screenshots/dashboard-details.png" alt="HR Workforce Intelligence Dashboard — Detailed: Headcount by department, total experience analysis, salary distribution, tenure by last organization, tenure and attrition analysis, job satisfaction breakdown, work-life balance metrics" width="100%">
+
+</div>
+
+<br>
+
+> **Platform:** Tableau Public · **Canvas:** 1366 × 768 px · **Theme:** Lavender + Purple  
+> **Data:** N = 1,191 Saudi employees · 60 features · SAR currency  
+> **Sections:** 6 KPI cards · 3-column layout · 18 analytical worksheets · Interactive cross-filters
+
+---
+
 ## 1. Project Overview
 
 This project provides an end-to-end empirical workforce analytics solution. Moving beyond predictive machine learning, this project demonstrates real-world data engineering, rigorous data hygiene, SQL database architecture, business KPI formulation, and multi-platform BI design (Tableau Public and Power BI).
@@ -102,8 +128,11 @@ HR-Workforce-Analytics/
 │   ├── quality_reports/                     # Markdown and CSV data quality reports
 │   └── tableau/                             # Tableau-ready master and aggregated CSV files
 │
+├── screenshots/                             # Dashboard preview images for README
+│   ├── dashboard-overview.png               # Dashboard top section: KPIs, departments, demographics
+│   └── dashboard-details.png                # Dashboard bottom section: experience, salary, satisfaction
+│
 ├── powerbi/                                 # Power BI report deliverables
-├── tableau/                                 # Tableau Public workbook deliverables
 │
 ├── tests/
 │   ├── test_clean_data.py                   # Data cleaning unit tests
@@ -121,8 +150,8 @@ HR-Workforce-Analytics/
 
 Implemented in `scripts/clean_data.py`:
 1. **Whitespace & Non-Breaking Space Removal:** Cleaned leading/trailing whitespace and Unicode `\xa0` across all column headers and string observations. Resolved split categories (e.g., `' Married'` and `'Married'` unified to `'Married'`).
-2. **Standardized Snake_Case Naming:** Renamed 35 raw survey headers into consistent, self-documenting database field names (e.g., `Allowances` $\rightarrow$ `allowance_count` to reflect that values 0–4 represent benefit counts, not monetary SAR amounts).
-3. **Categorical Entity Resolution:** Harmonized 26 raw department variations into 21 standard business units and 16 raw sector variations into 15 industries. Corrected typographical errors (`'Manger assistant'` $\rightarrow$ `'Manager Assistant'`).
+2. **Standardized Snake_Case Naming:** Renamed 35 raw survey headers into consistent, self-documenting database field names (e.g., `Allowances` → `allowance_count` to reflect that values 0–4 represent benefit counts, not monetary SAR amounts).
+3. **Categorical Entity Resolution:** Harmonized 26 raw department variations into 21 standard business units and 16 raw sector variations into 15 industries. Corrected typographical errors (`'Manger assistant'` → `'Manager Assistant'`).
 4. **Estimated Midpoint Approximations:** Because `Age`, `MonthlySalary`, `Years_Experience`, and `Years_experience_lastorganization` are recorded as interval bands, standardized midpoints were computed (`estimated_salary_sar`, `estimated_tenure_years`, `estimated_age_years`) to facilitate descriptive averages in SQL and BI cards.
 5. **Engineered Analytic Flags:** Created binary integer indicators (`is_attrition`, `is_female`, `has_overtime`, etc.) and 1–3 standardized Likert scale ratings.
 
@@ -205,10 +234,10 @@ The repository includes 8 comprehensive SQL files executing across `data/hr_anal
 * **Methodological Warning & Analytical Limitation:** Tenure for non-leavers may be ambiguous because the source instrument measures tenure at the last organization, and the survey data may not establish whether non-leavers' responses represent completed prior employment or current tenure. Descriptive comparisons must not be interpreted as causal effects. Furthermore, tenure is measured in broad survey brackets, masking micro-trends within years 1 through 4.
 
 ### Finding 3: Departmental Retention Disparity & Sample Thresholding
-* **Observed Pattern:** Applying a minimum reliability threshold of $N \ge 20$ employees separates 11 eligible departments from 10 small-sample departments:
-  * **Eligible High-Risk Departments ($N \ge 20$):** **Safety & Security (66.67%, N=27)**, **Human Resources (62.22%, N=45)**, **Accounting (60.94%, N=64)**, **Processes (56.57%, N=99)**, **Public Relations (55.88%, N=34)**, and **Sales (52.17%, N=23)**.
-  * **Eligible Low-Risk Departments ($N \ge 20$):** **Teaching (23.24%, N=142)** and **Patient Affairs (26.97%, N=89)**.
-  * **Small-Sample Departments ($N < 20$):** 10 departments (IT, Marketing, Banking Operations, Legal Affairs, Production, Training, Treasury, Studies & Design, Engineering, Medical Service) are retained in reporting but flagged (`small_sample = 1`) with risk tiers left unassigned (`NULL`) to avoid small-sample volatility.
+* **Observed Pattern:** Applying a minimum reliability threshold of N ≥ 20 employees separates 11 eligible departments from 10 small-sample departments:
+  * **Eligible High-Risk Departments (N ≥ 20):** **Safety & Security (66.67%, N=27)**, **Human Resources (62.22%, N=45)**, **Accounting (60.94%, N=64)**, **Processes (56.57%, N=99)**, **Public Relations (55.88%, N=34)**, and **Sales (52.17%, N=23)**.
+  * **Eligible Low-Risk Departments (N ≥ 20):** **Teaching (23.24%, N=142)** and **Patient Affairs (26.97%, N=89)**.
+  * **Small-Sample Departments (N < 20):** 10 departments (IT, Marketing, Banking Operations, Legal Affairs, Production, Training, Treasury, Studies & Design, Engineering, Medical Service) are retained in reporting but flagged (`small_sample = 1`) with risk tiers left unassigned (`NULL`) to avoid small-sample volatility.
 * **Business Interpretation:** Among sufficiently sampled departments, administrative and operational support functions experience turnover rates over 2.6 times higher than specialized public-facing roles like Teaching.
 * **Analytical Limitation:** Departments with fewer than 20 respondents exhibit high sampling error, requiring suppressed risk classifications until adequate sample size is achieved.
 
@@ -227,16 +256,18 @@ The repository includes 8 comprehensive SQL files executing across `data/hr_anal
 ## 12. Tableau Public & Power BI Implementation
 
 The master dataset extract and aggregated reporting tables are prepared for Tableau Public and Power BI integration:
-* **Primary Reporting Extract:** [`output/tableau/hr_workforce_master.csv`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/output/tableau/hr_workforce_master.csv) (1,191 rows, 60 features)
-* **Pre-Aggregated Benchmarks:** [`output/tableau/department_attrition_benchmark.csv`](file:///f:/Big4_Project/Hr%20anlyst/Saudi%20Employee%20Attrition%20Dataset/Saudi%20Employee%20Attrition%20Dataset/HR-Workforce-Analytics/output/tableau/department_attrition_benchmark.csv)
+* **Primary Reporting Extract:** `output/tableau/hr_workforce_master.csv` (1,191 rows, 60 features)
+* **Pre-Aggregated Benchmarks:** `output/tableau/department_attrition_benchmark.csv`
 
 ### Visual Architecture:
-1. **Executive KPI Header:** Total Headcount (1,191), Leavers (515), Attrition Rate (43.2%), Estimated Avg Tenure (4.8 yrs).
+1. **Executive KPI Header:** Total Headcount (1,191), Leavers (515), Attrition Rate (43.2%), Estimated Avg Tenure (5.4 yrs), Avg Salary (SAR 6,882), Satisfaction (1.97/3).
 2. **Department Benchmark:** Bar chart comparing departmental attrition rates against the 43.2% benchmark line, conditionally formatted by risk tier.
 3. **Headcount Volume:** Departmental scale distribution.
-4. **Tenure Lifecycle Curve:** Column chart highlighting the 74.2% leaver concentration in the <5 years tenure band.
-5. **Satisfaction Gradient:** Attrition elasticity across satisfaction levels.
-6. **Interactive Slicers:** Dynamic filtering by Department, Industry Sector, Salary Tier, and Gender.
+4. **Demographics Panel:** Age group, gender split, and marital status analysis with stacked retention bars.
+5. **Experience & Compensation:** Total experience bands, monthly salary distribution, and tenure lifecycle analysis.
+6. **Working Conditions:** Overtime payment types, business travel impact, and training program effectiveness.
+7. **Satisfaction & Well-being:** Job satisfaction gradient, work-life balance, and environment satisfaction meters.
+8. **Interactive Slicers:** Dynamic filtering by Department, Industry Sector, Salary Tier, and Gender.
 
 ---
 
@@ -286,10 +317,10 @@ python scripts/export_dashboard_data.py
 
 ## 14. Continuous Integration & Quality Assurance
 
-Automated testing is configured via GitHub Actions in [`.github/workflows/ci.yml`](file:///.github/workflows/ci.yml):
+Automated testing is configured via GitHub Actions in `.github/workflows/ci.yml`:
 * **Environment:** Python 3.12 runner
 * **Test Stages:**
-  1. `python -m unittest discover tests` — Executes data cleaning, entity resolution, and regression tests (verifying midpoints, boundary conditions $N=19, 20, 21$, and tenure metric definitions).
+  1. `python -m unittest discover tests` — Executes data cleaning, entity resolution, and regression tests (verifying midpoints, boundary conditions N=19, 20, 21, and tenure metric definitions).
   2. `python scripts/load_database.py` — Builds indexed SQLite database.
   3. `python scripts/run_quality_checks.py` — Executes and validates all 29 SQL queries across 8 analytical files.
 
